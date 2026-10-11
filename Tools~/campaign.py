@@ -19,6 +19,7 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.dont_write_bytecode = True  # Tools~ may sit in the read-only Library/PackageCache
 sys.path.insert(0, HERE)
 import compare_runs  # noqa: E402
 

@@ -27,6 +27,7 @@
 # Long commands block until done: run them in the background from an agent session.
 set -euo pipefail
 export UNITY_NO_BANNER=1
+export PYTHONDONTWRITEBYTECODE=1  # Tools~ may sit in the read-only Library/PackageCache
 HERE="$(cd "$(dirname "$0")" && (pwd -W 2>/dev/null || pwd))"
 ROOT="${AUTOPLAY_PROJECT:-$(pwd -W 2>/dev/null || pwd)}"
 [ -d "$ROOT/Assets" ] && [ -d "$ROOT/ProjectSettings" ] || { echo "not a Unity project: $ROOT (set AUTOPLAY_PROJECT)" >&2; exit 2; }

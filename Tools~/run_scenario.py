@@ -31,6 +31,7 @@ CHECKS (all must pass; a check with "severity": "warn" is reported but does not 
   {"type": "state", "label": "regex", "path": "game.frostAlpha", "op": ">=", "value": 0.9, "quantifier": "all|any"}
   {"type": "leaverChained"}                                           (net: whoever left is chained on the host)
   {"type": "analyzer", "cmd": "python -X utf8 tools/autoplay/analyze_picker.py {run}"}   (exit code 0 = pass)
+      {run} = the run folder, {tools} = this Tools~ folder (wherever the package lives: Packages/ or Library/PackageCache/)
 
 Writes <run>/verdict.json and prints one line per check. Exit code 0 = scenario passed.
 """
@@ -45,6 +46,7 @@ import shutil
 import subprocess
 import sys
 
+sys.dont_write_bytecode = True  # Tools~ may sit in the read-only Library/PackageCache
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import compare_runs  # noqa: E402
 
@@ -267,7 +269,8 @@ def check(run, c, project):
         return check_animation(run, c)
 
     if t == "analyzer":
-        cmd = c["cmd"].replace("{run}", run.path)
+        tools = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
+        cmd = c["cmd"].replace("{run}", run.path).replace("{tools}", tools)
         res = subprocess.run(shlex.split(cmd), cwd=project, capture_output=True, text=True, encoding="utf-8", errors="replace")
         tail = (res.stdout.strip().splitlines() or ["(no output)"])[-1]
         return res.returncode == 0, f"analyzer `{c['cmd'].split()[-2] if len(c['cmd'].split()) > 1 else c['cmd']}`: {tail}"

@@ -9,8 +9,28 @@ contain none of it.
 
 ## Install
 
-- Embedded: copy this folder into `Packages/`.
-- From git: `"com.unpseudo.autoplay": "https://github.com/<owner>/<repo>.git?path=/Packages/com.unpseudo.autoplay"`.
+Add it to the project's `Packages/manifest.json`, pinned to a release tag:
+
+```json
+"com.unpseudo.autoplay": "https://github.com/UnPseudoTotalementNormal/com.unpseudo.autoplay.git#v0.2.0"
+```
+
+Updating = changing the tag (see `CHANGELOG.md`). Unity also needs `com.unity.inputsystem` (pulled automatically).
+
+**Where the tools land.** With a git dependency the package (and `Tools~/`) lives in
+`Library/PackageCache/com.unpseudo.autoplay@<hash>/`, read-only and renamed on every update: never hard-code that
+path. Resolve it once in the project's wrapper (`Packages/com.unpseudo.autoplay/Tools~` first — the local override
+below — then the newest `Library/PackageCache/com.unpseudo.autoplay@*/Tools~`), and write `{tools}` in a scenario's
+analyzer command to reach a package tool. The tools never write into their own folder (no Python bytecode either).
+
+**Working on the package.** Changes are made in this repository, never in a project's `PackageCache`. To iterate
+against a real game, clone this repository into that project's `Packages/com.unpseudo.autoplay/` (keep that path in
+the project's `.gitignore`): an embedded package overrides the manifest's git dependency. Commit and push here, tag
+a release (`vX.Y.Z` = `package.json` version + a `CHANGELOG.md` entry), bump the tag in the project's manifest, then
+delete the clone.
+
+**Claude Code skill.** `Skill~/autoplay/SKILL.md` is a game-agnostic usage skill (goal → bots play → evidence →
+answer). Copy it into a project's `.claude/skills/autoplay/` and fill in its "This project" section.
 
 ## Plug a game in
 
@@ -67,7 +87,7 @@ to capture it from its first frame.
 
 - `-autoplay-fast-phases <regex>` + `-autoplay-fast-timescale X`: phases matching the regex (pure animation / recap
   phases where no bot acts) run faster; the others keep the run's time scale. Paused while a recording runs.
-- Game-specific levers live in the adapter (Corruption du Portail: `-autoplay-fast-fakes`).
+- Game-specific levers live in the adapter (e.g. a lever that makes fake roles act at once).
 
 ## Tools (`Tools~/`, ignored by the Unity importer)
 

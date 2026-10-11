@@ -4,15 +4,15 @@ For whoever (human or agent) needs autoplay to cover something it does not cover
 is not covered, extend the framework** (a lever, an event, a check), then prove the goal. Report "not covered → human
 playtest" only when the extension is out of scope for the task, and then say what extension would cover it.
 
-Catalogue of what exists: the game project's reference (in Corruption du Portail: `tools/autoplay/REFERENCE.md`, which
-also holds its game-specific rules and backlog recipes). Read it before adding anything: the lever you want may
+Catalogue of what exists: the game project's reference (e.g. `tools/autoplay/REFERENCE.md`, which also holds its
+game-specific rules and backlog recipes). Read it before adding anything: the lever you want may
 already exist under another name.
 
 ## Where does it go?
 
 | Need | Put it in |
 |---|---|
-| Works for any game (run loop, journal, capture, recorder, command line, a scenario check, a launcher) | the package: `Runtime/` (C#) or `Tools~/` (Python / shell) |
+| Works for any game (run loop, journal, capture, recorder, command line, a scenario check, a launcher) | the package, **in its own repository** (`Runtime/` C#, `Tools~/` Python / shell), then a new release tag bumped in the game's manifest — see README § Working on the package |
 | Knows the game (roles, powers, chat, lobby, netcode objects) | the game adapter (`IAutoplayGame` implementation = levers and process roles; its bot driver = actions and game events) |
 | Needs to observe or steer prod code the adapter cannot reach | a **small, dev-only seam** in prod (an interface the adapter plugs into, or a read-only accessor), never autoplay logic inside prod code |
 | Game-specific analysis | the game project's tools folder |
