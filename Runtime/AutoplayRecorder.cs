@@ -181,7 +181,9 @@ namespace Unpseudo.Autoplay
             try
             {
                 int _height = Mathf.Max(1, Mathf.RoundToInt(_full.height * (width / (float)_full.width)));
-                RenderTexture _rt = RenderTexture.GetTemporary(width, _height);
+                // The screenshot holds sRGB bytes in a linear texture: a linear target copies them unchanged. The default
+                // (sRGB in a linear-colour project) would encode them a second time and wash the frame out.
+                RenderTexture _rt = RenderTexture.GetTemporary(width, _height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
                 Graphics.Blit(_full, _rt);
                 RenderTexture _active = RenderTexture.active;
                 RenderTexture.active = _rt;

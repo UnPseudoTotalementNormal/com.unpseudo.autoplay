@@ -3,6 +3,13 @@
 Release tags are `vX.Y.Z` = the `version` in `package.json`. A project pins one in its manifest
 (`…com.unpseudo.autoplay.git#vX.Y.Z`); updating the package there = bumping that tag.
 
+## [0.2.1] - 2026-10-19
+
+### Fixed
+- Recorded frames (`-autoplay-record`) are no longer washed out in a linear-colour project: `AutoplayRecorder`
+  downscaled the screenshot through an sRGB RenderTexture, which encoded its already sRGB bytes a second time
+  (a black of 10 came out at 56). The blit now goes through a linear target and copies the bytes unchanged.
+
 ## [0.2.0] - 2026-10-11
 
 First release from its own repository (history kept from the game project it grew in).
